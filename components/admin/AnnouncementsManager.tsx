@@ -1,57 +1,35 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { SpecialAnnouncement } from '@/components/SpecialAnnouncement';
-import { useAnnouncements } from '../ActiveAnnouncementContext';
+} from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { SpecialAnnouncement } from "@/components/SpecialAnnouncement";
+import { useAnnouncements } from "@/components/ActiveAnnouncementContext";
 
-const mockAnnouncements = [
-  {
-    id: 1,
-    title: 'Happy Hour Special',
-    subtitle: 'Limited Time',
-    imageUrl: '/default-image.jpg',
-    offerTitle: 'Happy Hour Special',
-    offerDescription: 'Half-priced signature cocktails',
-    promoCode: 'HAPPY',
-    active: true,
-  },
-  {
-    id: 2,
-    title: 'Weekend DJ Night',
-    subtitle: 'Saturday Night',
-    imageUrl: '/default-image.jpg',
-    offerTitle: 'Weekend DJ Night',
-    offerDescription: 'Live music every Saturday',
-    promoCode: 'WEEKEND',
-    active: false,
-  },
-];
 
 export function AnnouncementsManager() {
-  const [announcements, setAnnouncements] = useState(mockAnnouncements);
+  const { announcements, setAnnouncements } = useAnnouncements();
   const [newAnnouncement, setNewAnnouncement] = useState({
-    title: '',
-    subtitle: '',
-    imageUrl: '',
-    offerTitle: '',
-    offerDescription: '',
-    promoCode: '',
+    title: "",
+    subtitle: "",
+    imageUrl: "",
+    offerTitle: "",
+    offerDescription: "",
+    promoCode: "",
   });
 
   const handleInputChange = (field: string, value: string) => {
-    setNewAnnouncement((prev) => ({ ...prev, [field]: value }));
+    setNewAnnouncement(prev => ({ ...prev, [field]: value }));
   };
 
   const handleCreateAnnouncement = () => {
@@ -67,26 +45,26 @@ export function AnnouncementsManager() {
     };
     setAnnouncements([...announcements, newItem]);
     setNewAnnouncement({
-      title: '',
-      subtitle: '',
-      imageUrl: '',
-      offerTitle: '',
-      offerDescription: '',
-      promoCode: '',
+      title: "",
+      subtitle: "",
+      imageUrl: "",
+      offerTitle: "",
+      offerDescription: "",
+      promoCode: "",
     });
   };
 
   return (
     <>
       {announcements
-        .filter((announcement) => announcement && announcement.active)
-        .map((announcement) => (
-          <SpecialAnnouncement
-            key={announcement.id}
-            announcement={announcement}
+        .filter(announcement => announcement && announcement.active)
+        .map(announcement => (
+          <SpecialAnnouncement 
+            key={announcement.id} 
+            announcement={announcement} 
           />
         ))}
-
+        
       <div className="space-y-6">
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">Create Special Announcement</h2>
@@ -96,7 +74,7 @@ export function AnnouncementsManager() {
               <Input
                 id="title"
                 value={newAnnouncement.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
+                onChange={(e) => handleInputChange("title", e.target.value)}
                 placeholder="e.g., Special Offer"
                 className="bg-neutral-800 border-neutral-700"
               />
@@ -106,7 +84,7 @@ export function AnnouncementsManager() {
               <Input
                 id="subtitle"
                 value={newAnnouncement.subtitle}
-                onChange={(e) => handleInputChange('subtitle', e.target.value)}
+                onChange={(e) => handleInputChange("subtitle", e.target.value)}
                 placeholder="e.g., Spring Special"
                 className="bg-neutral-800 border-neutral-700"
               />
@@ -116,7 +94,7 @@ export function AnnouncementsManager() {
               <Input
                 id="imageUrl"
                 value={newAnnouncement.imageUrl}
-                onChange={(e) => handleInputChange('imageUrl', e.target.value)}
+                onChange={(e) => handleInputChange("imageUrl", e.target.value)}
                 placeholder="Enter image URL"
                 className="bg-neutral-800 border-neutral-700"
               />
@@ -126,9 +104,7 @@ export function AnnouncementsManager() {
               <Input
                 id="offerTitle"
                 value={newAnnouncement.offerTitle}
-                onChange={(e) =>
-                  handleInputChange('offerTitle', e.target.value)
-                }
+                onChange={(e) => handleInputChange("offerTitle", e.target.value)}
                 placeholder="e.g., Book Now & Save"
                 className="bg-neutral-800 border-neutral-700"
               />
@@ -138,9 +114,7 @@ export function AnnouncementsManager() {
               <Textarea
                 id="offerDescription"
                 value={newAnnouncement.offerDescription}
-                onChange={(e) =>
-                  handleInputChange('offerDescription', e.target.value)
-                }
+                onChange={(e) => handleInputChange("offerDescription", e.target.value)}
                 placeholder="e.g., 15% off on all wedding packages"
                 className="bg-neutral-800 border-neutral-700"
               />
@@ -150,7 +124,7 @@ export function AnnouncementsManager() {
               <Input
                 id="promoCode"
                 value={newAnnouncement.promoCode}
-                onChange={(e) => handleInputChange('promoCode', e.target.value)}
+                onChange={(e) => handleInputChange("promoCode", e.target.value)}
                 placeholder="e.g., SUMMER24"
                 className="bg-neutral-800 border-neutral-700"
               />
@@ -164,30 +138,17 @@ export function AnnouncementsManager() {
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">Active Announcements</h2>
           {announcements.map((announcement) => (
-            <Card
-              key={announcement.id}
-              className="bg-neutral-800 border-neutral-700"
-            >
+            <Card key={announcement.id} className="bg-neutral-800 border-neutral-700">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle>{announcement.title}</CardTitle>
                     <CardDescription>
                       <div className="space-y-1">
-                        <p>
-                          <strong>Subtitle:</strong> {announcement.subtitle}
-                        </p>
-                        <p>
-                          <strong>Offer Title:</strong>{' '}
-                          {announcement.offerTitle}
-                        </p>
-                        <p>
-                          <strong>Description:</strong>{' '}
-                          {announcement.offerDescription}
-                        </p>
-                        <p>
-                          <strong>Promo Code:</strong> {announcement.promoCode}
-                        </p>
+                        <p><strong>Subtitle:</strong> {announcement.subtitle}</p>
+                        <p><strong>Offer Title:</strong> {announcement.offerTitle}</p>
+                        <p><strong>Description:</strong> {announcement.offerDescription}</p>
+                        <p><strong>Promo Code:</strong> {announcement.promoCode}</p>
                       </div>
                     </CardDescription>
                   </div>
@@ -196,9 +157,7 @@ export function AnnouncementsManager() {
                     onCheckedChange={(checked) => {
                       setAnnouncements(
                         announcements.map((a) =>
-                          a.id === announcement.id
-                            ? { ...a, active: checked }
-                            : a
+                          a.id === announcement.id ? { ...a, active: checked } : a
                         )
                       );
                     }}

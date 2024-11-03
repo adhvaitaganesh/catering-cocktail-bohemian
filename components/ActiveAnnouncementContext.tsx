@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from "react";
 
 interface Announcement {
   id: number;
@@ -13,54 +13,27 @@ interface Announcement {
   active: boolean;
 }
 
-interface AnnouncementContextType {
+type AnnouncementContextType = {
   announcements: Announcement[];
-  setAnnouncements: React.Dispatch<React.SetStateAction<Announcement[]>>;
-}
+  setAnnouncements: (announcements: Announcement[]) => void;
+};
 
-const initialAnnouncements: Announcement[] = [
-  {
-    id: 1,
-    title: 'Special Offer',
-    subtitle: 'Limited Time',
-    imageUrl: '/default-image.jpg',
-    offerTitle: 'Spring Special',
-    offerDescription: 'Book now and save 15%',
-    promoCode: 'SPRING24',
-    active: true,
-  },
-];
+const AnnouncementContext = createContext<AnnouncementContextType | undefined>(undefined);
 
-const AnnouncementContext = createContext<AnnouncementContextType | undefined>(
-  undefined
-);
-
-export function AnnouncementProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [announcements, setAnnouncements] =
-    useState<Announcement[]>(initialAnnouncements);
-
-  const value = {
-    announcements,
-    setAnnouncements,
-  };
+export function AnnouncementProvider({ children }: { children: React.ReactNode }) {
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
 
   return (
-    <AnnouncementContext.Provider value={value}>
+    <AnnouncementContext.Provider value={{ announcements, setAnnouncements }}>
       {children}
     </AnnouncementContext.Provider>
   );
 }
 
-export function useAnnouncements() {
+export function useAnnouncements(): AnnouncementContextType {
   const context = useContext(AnnouncementContext);
-  if (context === undefined) {
-    throw new Error(
-      'useAnnouncements must be used within an AnnouncementProvider'
-    );
+  if (!context) {
+    throw new Error('useAnnouncements must be used within an AnnouncementProvider');
   }
   return context;
 }

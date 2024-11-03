@@ -203,7 +203,7 @@ export default function Home() {
             Get in Touch
           </h2>
           <p className="text-amber-100/70 mb-8">
-            Available for events throughout New York City and the Tri-State area
+            Available for events throughout Saar-Lou-Lux region.
             <br />
             Weddings • Corporate Events • Private Parties
             <br />
