@@ -4,6 +4,7 @@ import { Playfair_Display, Inter } from 'next/font/google';
 import { Logo } from '@/components/logo';
 import Link from 'next/link';
 import { AnnouncementProvider } from '@/components/ActiveAnnouncementContext';
+import {AdminProvider} from '@/contexts/AdminContext'
 
 const playfair = Playfair_Display({ subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
@@ -29,7 +30,9 @@ export default function RootLayout({
             </Link>
           </div>
         </header>
+        <AdminProvider>
         <AnnouncementProvider>{children}</AnnouncementProvider>
+        </AdminProvider>
       </body>
     </html>
   );

@@ -19,14 +19,40 @@ import { useState } from 'react';
 import { SpecialAnnouncement } from '@/components/SpecialAnnouncement';
 import { AdminButton } from '@/components/AdminButton';
 import { Testimonials } from '@/components/Testimonials';
-import { ActiveAnnouncements } from '@/components/ActiveAnnouncements';
+import { useAdmin } from "@/contexts/AdminContext";
 
 export default function Home() {
+  const { addBooking, addRequest } = useAdmin();
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [bookingForm, setBookingForm] = useState({
+    name: "",
+    date: "",
+    time: "",
+    guests: 0,
+  });
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleBookingSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    addBooking(bookingForm);
+    // Reset form
+    setBookingForm({ name: "", date: "", time: "", guests: 0 });
+  };
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    addRequest(contactForm);
+    // Reset form
+    setContactForm({ name: "", email: "", message: "" });
+  };
 
   return (
     <main className="min-h-screen bg-[#1a1814]">
-      <ActiveAnnouncements />
+      <SpecialAnnouncement />
       <AdminButton />
       <Header />
 
@@ -67,48 +93,64 @@ export default function Home() {
                     experience.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      placeholder="Your name"
-                      className="bg-transparent border-amber-100/20"
-                    />
+                <form onSubmit={handleBookingSubmit}>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="name">Name</Label>
+                      <Input
+                        id="name"
+                        value={bookingForm.name}
+                        onChange={(e) => setBookingForm({ ...bookingForm, name: e.target.value })}
+                        placeholder="Your name"
+                        className="bg-transparent border-amber-100/20"
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label>Event Date</Label>
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={(newDate) => {
+                          setDate(newDate);
+                          if (newDate) {
+                            setBookingForm({ 
+                              ...bookingForm, 
+                              date: newDate.toISOString().split('T')[0] 
+                            });
+                          }
+                        }}
+                        className="rounded-md border-amber-100/20"
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="time">Event Time</Label>
+                      <Input
+                        id="time"
+                        value={bookingForm.time}
+                        onChange={(e) => setBookingForm({ ...bookingForm, time: e.target.value })}
+                        placeholder="7:00 PM"
+                        className="bg-transparent border-amber-100/20"
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="guests">Expected Guests</Label>
+                      <Input
+                        id="guests"
+                        type="number"
+                        value={bookingForm.guests}
+                        onChange={(e) => setBookingForm({ ...bookingForm, guests: parseInt(e.target.value) })}
+                        placeholder="100"
+                        className="bg-transparent border-amber-100/20"
+                      />
+                    </div>
                   </div>
-                  <div className="grid gap-2">
-                    <Label>Event Date</Label>
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      className="rounded-md border-amber-100/20"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="guests">Expected Guests</Label>
-                    <Input
-                      id="guests"
-                      type="number"
-                      placeholder="100"
-                      className="bg-transparent border-amber-100/20"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="message">Event Details</Label>
-                    <Textarea
-                      id="message"
-                      placeholder="Tell us about your event type, venue, and preferences..."
-                      className="bg-transparent border-amber-100/20"
-                    />
-                  </div>
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full bg-amber-100 text-[#1a1814] hover:bg-amber-200"
-                >
-                  Submit Inquiry
-                </Button>
+                  <Button
+                    type="submit"
+                    className="w-full bg-amber-100 text-[#1a1814] hover:bg-amber-200"
+                  >
+                    Submit Inquiry
+                  </Button>
+                </form>
               </DialogContent>
             </Dialog>
           </div>
@@ -203,7 +245,7 @@ export default function Home() {
             Get in Touch
           </h2>
           <p className="text-amber-100/70 mb-8">
-            Available for events throughout Saar-Lou-Lux region.
+            Available for events throughout New York City and the Tri-State area
             <br />
             Weddings • Corporate Events • Private Parties
             <br />
@@ -225,31 +267,47 @@ export default function Home() {
                   Questions about our services or pricing?
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="contact-email">Email</Label>
-                  <Input
-                    id="contact-email"
-                    type="email"
-                    placeholder="your@email.com"
-                    className="bg-transparent border-amber-100/20"
-                  />
+              <form onSubmit={handleContactSubmit}>
+                <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="contact-name">Name</Label>
+                    <Input
+                      id="contact-name"
+                      value={contactForm.name}
+                      onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                      placeholder="Your name"
+                      className="bg-transparent border-amber-100/20"
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="contact-email">Email</Label>
+                    <Input
+                      id="contact-email"
+                      type="email"
+                      value={contactForm.email}
+                      onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                      placeholder="your@email.com"
+                      className="bg-transparent border-amber-100/20"
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="contact-message">Message</Label>
+                    <Textarea
+                      id="contact-message"
+                      value={contactForm.message}
+                      onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                      placeholder="Tell us about your event..."
+                      className="bg-transparent border-amber-100/20"
+                    />
+                  </div>
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="contact-message">Message</Label>
-                  <Textarea
-                    id="contact-message"
-                    placeholder="Tell us about your event..."
-                    className="bg-transparent border-amber-100/20"
-                  />
-                </div>
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-amber-100 text-[#1a1814] hover:bg-amber-200"
-              >
-                Send Message
-              </Button>
+                <Button
+                  type="submit"
+                  className="w-full bg-amber-100 text-[#1a1814] hover:bg-amber-200"
+                >
+                  Send Message
+                </Button>
+              </form>
             </DialogContent>
           </Dialog>
         </div>

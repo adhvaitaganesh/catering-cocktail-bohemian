@@ -1,5 +1,6 @@
 "use client";
 
+import { useAdmin } from "@/contexts/AdminContext";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -11,26 +12,9 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
-const mockBookings = [
-  {
-    id: 1,
-    name: "John Doe",
-    date: "2024-03-20",
-    time: "19:00",
-    guests: 4,
-    status: "confirmed",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    date: "2024-03-21",
-    time: "20:00",
-    guests: 2,
-    status: "pending",
-  },
-];
-
 export function BookingsManager() {
+  const { bookings } = useAdmin();
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -51,7 +35,7 @@ export function BookingsManager() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {mockBookings.map((booking) => (
+          {bookings.map((booking) => (
             <TableRow key={booking.id}>
               <TableCell>{booking.name}</TableCell>
               <TableCell>{booking.date}</TableCell>

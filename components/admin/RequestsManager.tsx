@@ -1,35 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-
-const mockRequests = [
-  {
-    id: 1,
-    name: "Alice Johnson",
-    email: "alice@example.com",
-    message: "Interested in hosting a corporate event for 50 people next month.",
-    date: "2024-03-19",
-    status: "new",
-  },
-  {
-    id: 2,
-    name: "Bob Wilson",
-    email: "bob@example.com",
-    message: "Looking to book the venue for a wedding reception.",
-    date: "2024-03-18",
-    status: "replied",
-  },
-];
+import { useAdmin } from "@/contexts/AdminContext";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Badge } from "lucide-react";
 
 export function RequestsManager() {
+  const { requests } = useAdmin();
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -39,7 +16,7 @@ export function RequestsManager() {
         </Button>
       </div>
       <div className="space-y-4">
-        {mockRequests.map((request) => (
+        {requests.map((request) => (
           <Card key={request.id} className="bg-neutral-800 border-neutral-700">
             <CardHeader>
               <div className="flex items-center justify-between">
