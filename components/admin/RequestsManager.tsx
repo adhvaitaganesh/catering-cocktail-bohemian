@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { requests } from "@/services/api";
+import { requests } from "@/src/services/api";
 import { ContactRequest } from "@/services/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
