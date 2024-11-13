@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import Header from '/components/header';
+import Header from '@/components/header';
 import {
   Dialog,
   DialogContent,
@@ -20,6 +20,7 @@ import { SpecialAnnouncement } from '@/components/SpecialAnnouncement';
 import { AdminButton } from '@/components/AdminButton';
 import { Testimonials } from '@/components/Testimonials';
 import { useAdmin } from "@/contexts/AdminContext";
+import { ActiveAnnouncements } from '@/components/ActiveAnnouncements';
 
 export default function Home() {
   const { addBooking, addRequest } = useAdmin();
@@ -52,7 +53,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#1a1814]">
-      <SpecialAnnouncement />
+      <ActiveAnnouncements />
       <AdminButton />
       <Header />
 
