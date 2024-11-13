@@ -1,12 +1,22 @@
 "use client";
 
 import { useAdmin } from "@/contexts/AdminContext";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { Badge } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+// Add this type for badge variants
+type BadgeVariant = "default" | "secondary" | "destructive" | "outline";
 
 export function RequestsManager() {
   const { requests } = useAdmin();
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -25,7 +35,7 @@ export function RequestsManager() {
                   <CardDescription>{request.email}</CardDescription>
                 </div>
                 <Badge
-                  variant={request.status === "new" ? "default" : "secondary"}
+                  variant={request.status === "new" ? "default" : "secondary" as BadgeVariant}
                 >
                   {request.status}
                 </Badge>
