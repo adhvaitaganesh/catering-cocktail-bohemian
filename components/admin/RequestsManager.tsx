@@ -1,6 +1,8 @@
 "use client";
 
-import { useAdmin } from "@/contexts/AdminContext";
+import { useState, useEffect } from "react";
+import { requests } from "@/services/api";
+import { ContactRequest } from "@/services/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,23 +13,59 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-// Add this type for badge variants
-type BadgeVariant = "default" | "secondary" | "destructive" | "outline";
-
 export function RequestsManager() {
-  const { requests } = useAdmin();
+  const [contactRequests, setContactRequests] = useState<ContactRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadRequests();
+  }, []);
+
+  const loadRequests = async () => {
+    try {
+      const response = await requests.getAll();
+      setContactRequests(response.data);
+    } catch (error) {
+      console.error('Failed to load requests:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStatusUpdate = async (id: string, status: ContactRequest['status']) => {
+    try {
+      await requests.updateStatus(id, status);
+      loadRequests(); // Reload the list after update
+    } catch (error) {
+      console.error('Failed to update request status:', error);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Contact Requests</h2>
-        <Button variant="outline" size="sm">
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={() => {
+            contactRequests.forEach(request => {
+              if (request.status === 'new') {
+                handleStatusUpdate(request._id, 'replied');
+              }
+            });
+          }}
+        >
           Mark All as Read
         </Button>
       </div>
       <div className="space-y-4">
-        {requests.map((request) => (
-          <Card key={request.id} className="bg-neutral-800 border-neutral-700">
+        {contactRequests.map((request) => (
+          <Card key={request._id} className="bg-neutral-800 border-neutral-700">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -35,7 +73,7 @@ export function RequestsManager() {
                   <CardDescription>{request.email}</CardDescription>
                 </div>
                 <Badge
-                  variant={request.status === "new" ? "default" : "secondary" as BadgeVariant}
+                  variant={request.status === "new" ? "default" : "secondary"}
                 >
                   {request.status}
                 </Badge>
@@ -46,11 +84,12 @@ export function RequestsManager() {
               <div className="flex items-center justify-between">
                 <span className="text-xs text-neutral-400">{request.date}</span>
                 <div className="space-x-2">
-                  <Button variant="outline" size="sm">
-                    Reply
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    Archive
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleStatusUpdate(request._id, 'replied')}
+                  >
+                    Mark as Replied
                   </Button>
                 </div>
               </div>
