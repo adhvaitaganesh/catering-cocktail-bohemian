@@ -1,13 +1,15 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { auth, adminAuth } from '../middleware/auth';
 import { Booking } from '../models/Booking';
 
 const router = express.Router();
 
-// Create booking (public)
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req: Request, res: Response) => {
   try {
-    const booking = new Booking(req.body);
+    const booking = new Booking({
+      ...req.body,
+      customerId: req.customer?.customerId
+    });
     await booking.save();
     res.status(201).send(booking);
   } catch (error) {

@@ -1,6 +1,21 @@
 import mongoose from 'mongoose';
 
-const bookingSchema = new mongoose.Schema({
+export interface Booking {
+  _id: string;
+  customerId: string | undefined;
+  name: string;
+  date: string;
+  time: string;
+  guests: number;
+  status: 'pending' | 'confirmed';
+}
+
+const bookingSchema = new mongoose.Schema<Booking>({
+  customerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Customer',
+    required: true
+  },
   name: {
     type: String,
     required: true,
@@ -24,4 +39,4 @@ const bookingSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-export const Booking = mongoose.model('Booking', bookingSchema); 
+export const Booking = mongoose.model<Booking>('Booking', bookingSchema); 

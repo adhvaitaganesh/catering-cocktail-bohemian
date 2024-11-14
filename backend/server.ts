@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -9,7 +9,7 @@ import announcementRoutes from './routes/announcements';
 
 dotenv.config();
 
-const app = express();
+const app: Express = express();
 
 // Middleware
 app.use(cors());
